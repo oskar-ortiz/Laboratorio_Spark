@@ -1,0 +1,22 @@
+.venv/
+.tools/
+.hadoop/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.vscode/*.log
+
+# Local dataset and generated data
+data/raw/
+data/processed/
+data/spark-warehouse/
+*.xlsx
+*.xls
+*.zip
+
+# Spark and application logs
+logs/
+*.log
+metastore_db/
+derby.log
