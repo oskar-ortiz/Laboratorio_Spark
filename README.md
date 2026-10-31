@@ -71,24 +71,15 @@ El script responde las 10 preguntas del taller, escribe un CSV por pregunta en `
 
 ```mermaid
 flowchart TD
-    Source[Online Retail Dataset
-Excel + CSV raw files] --> Ingest[Data Preparation Layer
-prepare_dataset.py]
-    Ingest --> Raw[(data/raw/)
-Raw source files]
-    Raw --> Spark[PySpark Session
-Spark engine + local cluster config]
+    Source["Online Retail Dataset<br/>Excel + CSV raw files"] --> Ingest["Data Preparation Layer<br/>prepare_dataset.py"]
+    Ingest --> Raw["data/raw/<br/>Raw source files"]
+    Raw --> Spark["PySpark Session<br/>Spark engine + local cluster config"]
 
-    Spark --> ETL[ETL Processing Layer
-etl_online_retail.py]
-    ETL --> Clean[Transformation & Quality Rules
-normalization, filtering, aggregations]
-    Clean --> Analysis[Business Queries
-10 analytical questions]
-    Analysis --> Output[(data/output/)
-CSV reports]
-    Output --> Summary[CONCLUSIONES.md
-Executive findings]
+    Spark --> ETL["ETL Processing Layer<br/>etl_online_retail.py"]
+    ETL --> Clean["Transformation & Quality Rules<br/>normalization, filtering, aggregations"]
+    Clean --> Analysis["Business Queries<br/>10 analytical questions"]
+    Analysis --> Output["data/output/<br/>CSV reports"]
+    Output --> Summary["CONCLUSIONES.md<br/>Executive findings"]
 
     subgraph LocalStack[Local execution environment]
         Spark
