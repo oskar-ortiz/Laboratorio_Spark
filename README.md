@@ -2,6 +2,41 @@
 
 Entorno local y ETL del Online Retail Dataset (UCI) con PySpark 3.5.6.
 
+## Portfolio & Author
+
+- Portfolio: https://oskar-ortiz.vercel.app
+- GitHub: https://github.com/oskar-ortiz
+- This project highlights a practical analytics engineering workflow using PySpark for ingestion, transformation, and reporting on a large transactional retail dataset.
+
+## Enterprise Architecture Overview
+
+```mermaid
+flowchart TD
+    Source["Online Retail Dataset<br/>Excel + CSV raw files"] --> Ingest["Data Preparation Layer<br/>prepare_dataset.py"]
+    Ingest --> Raw["data/raw/<br/>Raw source files"]
+    Raw --> Spark["PySpark Session<br/>Spark engine + local cluster config"]
+
+    Spark --> ETL["ETL Processing Layer<br/>etl_online_retail.py"]
+    ETL --> Clean["Transformation & Quality Rules<br/>normalization, filtering, aggregations"]
+    Clean --> Analysis["Business Queries<br/>10 analytical questions"]
+    Analysis --> Output["data/output/<br/>CSV reports"]
+    Output --> Summary["CONCLUSIONES.md<br/>Executive findings"]
+
+    subgraph LocalStack["Local execution environment"]
+        Spark
+        ETL
+        Clean
+        Analysis
+    end
+```
+
+### Design Principles
+- Separate raw input handling from transformation and analytical reasoning.
+- Keep the workflow reproducible and auditable by preserving intermediate dataset steps.
+- Use Spark as the computation layer while ensuring output artifacts remain traceable.
+- Convert business questions into a clear, testable analytical pipeline.
+- Maintain a direct bridge between data engineering tasks and executive reporting.
+
 ## Estado
 
 - Java 17 portable: `.tools/jdk-17/`
@@ -81,7 +116,7 @@ flowchart TD
     Analysis --> Output["data/output/<br/>CSV reports"]
     Output --> Summary["CONCLUSIONES.md<br/>Executive findings"]
 
-    subgraph LocalStack[Local execution environment]
+    subgraph LocalStack["Local execution environment"]
         Spark
         ETL
         Clean
@@ -91,7 +126,7 @@ flowchart TD
 
 ### Topology Notes
 - El punto de entrada del flujo es la preparación del dataset local, donde el Excel se convierte a CSV para asegurar un procesamiento reproducible con PySpark.
-- La capa de Spark centraliza la ejecución del ETL y la computación distribuida lógica en un entorno local, validado para datos transaccionales de retail.
+- La capa de Spark centraliza la ejecución del ETL y la computación lógica en un entorno local, validado para datos transaccionales de retail.
 - La etapa de transformación aplica reglas de negocio y calidad para calcular métricas de negocio, ingresos, devoluciones y patrones de comportamiento.
 - La salida final se materializa en archivos CSV por consulta y también en `CONCLUSIONES.md`, facilitando tanto la trazabilidad técnica como la presentación de resultados.
 - La arquitectura mantiene una separación clara entre ingestión, transformación, análisis y entrega, lo que facilita la escalabilidad y la auditoría del proceso.
