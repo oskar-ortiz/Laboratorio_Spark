@@ -1,28 +1,27 @@
 # Laboratorio Spark
 
-Entorno local y ETL del Online Retail Dataset (UCI) con PySpark 3.5.6.
+Entorno local y ETL del Online Retail Dataset (UCI) con PySpark 3.5.6, orientado a análisis de comportamiento comercial, agregación de métricas y entrega de resultados en formato tabular para toma de decisiones.
 
-## Portfolio & Author
+## Autoría y portafolio
 
 - Portfolio: https://oskar-ortiz.vercel.app
 - GitHub: https://github.com/oskar-ortiz
-- This project highlights a practical analytics engineering workflow using PySpark for ingestion, transformation, and reporting on a large transactional retail dataset.
 
-## Enterprise Architecture Overview
+## Visión arquitectónica empresarial
 
 ```mermaid
 flowchart TD
-    Source["Online Retail Dataset<br/>Excel + CSV raw files"] --> Ingest["Data Preparation Layer<br/>prepare_dataset.py"]
-    Ingest --> Raw["data/raw/<br/>Raw source files"]
-    Raw --> Spark["PySpark Session<br/>Spark engine + local cluster config"]
+    Source["Dataset Online Retail<br/>Excel + CSV raw files"] --> Ingest["Capa de preparación<br/>prepare_dataset.py"]
+    Ingest --> Raw["data/raw/<br/>Fuentes brutas"]
+    Raw --> Spark["PySpark Session<br/>Motor Spark + configuración local"]
 
-    Spark --> ETL["ETL Processing Layer<br/>etl_online_retail.py"]
-    ETL --> Clean["Transformation & Quality Rules<br/>normalization, filtering, aggregations"]
-    Clean --> Analysis["Business Queries<br/>10 analytical questions"]
-    Analysis --> Output["data/output/<br/>CSV reports"]
-    Output --> Summary["CONCLUSIONES.md<br/>Executive findings"]
+    Spark --> ETL["Capa ETL<br/>etl_online_retail.py"]
+    ETL --> Clean["Reglas de transformación y calidad<br/>normalización, filtrado, agregaciones"]
+    Clean --> Analysis["Consultas analíticas<br/>10 preguntas del taller"]
+    Analysis --> Output["data/output/<br/>CSV de resultados"]
+    Output --> Summary["CONCLUSIONES.md<br/>Hallazgos ejecutivos"]
 
-    subgraph LocalStack["Local execution environment"]
+    subgraph LocalStack["Entorno local de ejecución"]
         Spark
         ETL
         Clean
@@ -30,12 +29,12 @@ flowchart TD
     end
 ```
 
-### Design Principles
-- Separate raw input handling from transformation and analytical reasoning.
-- Keep the workflow reproducible and auditable by preserving intermediate dataset steps.
-- Use Spark as the computation layer while ensuring output artifacts remain traceable.
-- Convert business questions into a clear, testable analytical pipeline.
-- Maintain a direct bridge between data engineering tasks and executive reporting.
+### Principios de diseño
+- Separar la ingesta de datos brutos de la transformación y análisis lógico.
+- Mantener un flujo reproducible y auditado para cada etapa del pipeline.
+- Usar Spark como capa de cálculo y asegurar trazabilidad de artefactos de salida.
+- Convertir cada pregunta de negocio en una consulta analítica verificable.
+- Mantener un puente claro entre ingeniería de datos y reporting ejecutivo.
 
 ## Estado
 
@@ -65,7 +64,7 @@ call scripts\activate.bat
 python .\scripts\prepare_dataset.py
 ```
 
-## Prueba minima de PySpark
+## Prueba mínima de PySpark
 
 ```powershell
 python .\scripts\smoke_test.py
@@ -84,14 +83,14 @@ El script responde las 10 preguntas del taller, escribe un CSV por pregunta en `
 | Archivo | Pregunta |
 | --- | --- |
 | `q01_total_facturas.csv` | Total de facturas |
-| `q02_clientes_unicos.csv` | Clientes unicos |
+| `q02_clientes_unicos.csv` | Clientes únicos |
 | `q03_ingreso_total.csv` | Ingreso total neto |
-| `q04_producto_mas_vendido.csv` | Producto mas vendido |
+| `q04_producto_mas_vendido.csv` | Producto más vendido |
 | `q05_cliente_mayor_compra.csv` | Cliente con mayor compra |
-| `q06_top_5_paises.csv` | Top 5 paises fuera de UK |
+| `q06_top_5_paises.csv` | Top 5 países fuera de UK |
 | `q07_ticket_promedio.csv` | Ticket promedio |
 | `q08_productos_por_factura.csv` | Min/max/avg productos por factura |
-| `q09_mes_mas_ventas.csv` | Mes con mas ventas |
+| `q09_mes_mas_ventas.csv` | Mes con más ventas |
 | `q10_porcentaje_devoluciones.csv` | % facturas con devoluciones |
 | `ranking_clientes_top_100.csv` | Ranking opcional con `rank()` |
 
@@ -99,41 +98,5 @@ El script responde las 10 preguntas del taller, escribe un CSV por pregunta en `
 
 - Ingreso neto: `Quantity * UnitPrice` (incluye cantidades negativas).
 - Devoluciones: `Quantity < 0` o `InvoiceNo` que empieza por `C`.
-- Producto mas vendido: solo cantidades positivas.
+- Producto más vendido: solo cantidades positivas.
 - Productos por factura: referencias `StockCode` distintas.
-
-## Architecture & Data Processing Topology
-
-```mermaid
-flowchart TD
-    Source["Online Retail Dataset<br/>Excel + CSV raw files"] --> Ingest["Data Preparation Layer<br/>prepare_dataset.py"]
-    Ingest --> Raw["data/raw/<br/>Raw source files"]
-    Raw --> Spark["PySpark Session<br/>Spark engine + local cluster config"]
-
-    Spark --> ETL["ETL Processing Layer<br/>etl_online_retail.py"]
-    ETL --> Clean["Transformation & Quality Rules<br/>normalization, filtering, aggregations"]
-    Clean --> Analysis["Business Queries<br/>10 analytical questions"]
-    Analysis --> Output["data/output/<br/>CSV reports"]
-    Output --> Summary["CONCLUSIONES.md<br/>Executive findings"]
-
-    subgraph LocalStack["Local execution environment"]
-        Spark
-        ETL
-        Clean
-        Analysis
-    end
-```
-
-### Topology Notes
-- El punto de entrada del flujo es la preparación del dataset local, donde el Excel se convierte a CSV para asegurar un procesamiento reproducible con PySpark.
-- La capa de Spark centraliza la ejecución del ETL y la computación lógica en un entorno local, validado para datos transaccionales de retail.
-- La etapa de transformación aplica reglas de negocio y calidad para calcular métricas de negocio, ingresos, devoluciones y patrones de comportamiento.
-- La salida final se materializa en archivos CSV por consulta y también en `CONCLUSIONES.md`, facilitando tanto la trazabilidad técnica como la presentación de resultados.
-- La arquitectura mantiene una separación clara entre ingestión, transformación, análisis y entrega, lo que facilita la escalabilidad y la auditoría del proceso.
-
-### Architecture Summary
-- Source ingestion: `Excel / CSV -> raw data`
-- Processing engine: `PySpark 3.5.6`
-- Workflow: `prepare_dataset -> ETL -> transformations -> outputs`
-- Final artifacts: `data/output/*.csv` + `CONCLUSIONES.md`
-- Design principle: deterministic local ETL with analytical reporting by layer
